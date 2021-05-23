@@ -1,5 +1,22 @@
 @extends(BACKEND_THEME_NAME.'.layouts.master')
 
+@push('PAGE_PLUGINS_CSS')
+<link rel="stylesheet" href="https://unpkg.com/@tarekraafat/autocomplete.js@9.0.0/dist/css/autoComplete.css">
+@endpush
+
+@push('PAGE_ASSETS_CSS')
+<style type="text/css">
+	.custom-autocomplete
+	{
+		max-height: 200px;
+	    overflow-y: auto;
+	    overflow-x: hidden;
+	    margin-top: 0rem;
+	}
+
+</style>
+@endpush
+
 @section('content')
 
 <!-- Content Wrapper. Contains page content -->
@@ -113,9 +130,17 @@
 				            			</div>
 				            		</div>
 			            		</div>
+			            		<div class="row">
+			            			<div class="col-md-6">
+			            				<div class="form-group">
+						                    <label for="brands">Brands</label>
+						                    <input type="text" class="form-control" name="brands" id="brands"  placeholder="">
+						                </div>
+			            			</div>
+			            		</div>
 			          		</div>
 			          		<div class="card-footer">
-			                 	<button type="submit" class="btn btn-outline-primary">Submit</button>
+			                 	<!-- <button type="submit" class="btn btn-outline-primary">Submit</button> -->
 			                 	<input type="submit" name="submit" value="submit" class="btn btn-outline-success">
 			                </div>
 			            </form>
@@ -132,6 +157,7 @@
 
 @push('PAGE_PLUGINS_JS')
 <script src="{{back_asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
+<script src="https://unpkg.com/@tarekraafat/autocomplete.js@9.0.0/dist/js/autoComplete.min.js"></script>
 @endpush
 
 @push('PAGE_ASSET_JS')
@@ -143,6 +169,62 @@
 
 	$(function () {
 	  bsCustomFileInput.init();
+	});
+
+	const autoCompleteJS = new autoComplete({ 
+		selector: "#brands",
+	    placeHolder: "Search for Food...",
+	    data: {
+	        src: ['BAMS', 'BDS', 'BHMS', 'BSMS', 'CASIF', 'CCST', 'CESAS', 'DAA', 'DCH', 'DCP', 'DGO', 'DIP', 'DLO', 'DM', 'DNB', 'DOMS', 'DTCD', 'DVD', 'FAAD', 'FAAEM', 'FAAFP', 'FACC', 'FACCP', 'FACE', 'FACEP', 'FACFAS', 'FACG', 'FACOG', 'FACOS', 'FACP', 'FACS', 'FASPS', 'FCCP', 'FCGP', 'FHM', 'FIAGES', 'FIAMS', 'FICMCH', 'FICS', 'FIPS', 'FMAS', 'FRCOG', 'FRCOPHTH', 'FRCP', 'FRCS', 'FRSM', 'FSCAI', 'FSTS', 'MBBS', 'MCH', 'MD', 'MDS', 'MIAMS', 'MIDA', 'MPT', 'MRCOG', 'MRCOPHTH', 'MRCP', 'MS', 'PDCC', 'PGDIPLOMA', 'PHD']
+	    },
+	    // trigger: {
+	    // 	event: ["input"],
+	    // 	condition: (event, queryValue) => {
+		   //      return queryValue.replace(/ /g, "").length; 
+		   //  }
+	    // },
+	    threshold: null,
+	    resultsList: {
+	    	render: true,
+		    element: "ul",
+		    idName: "autoComplete_list",
+		    className: "autoComplete_list custom-autocomplete",
+		    destination: "#brands",
+		    position: "afterend",
+		    maxResults: 10,
+		    // container: (element) => {
+		    //     element.setAttribute("data-parent", "food-list");
+		    // },
+		    // noResults: (list, query) => {
+		    //     // Create no results element
+		    //     const message = document.createElement("li");
+		    //     message.setAttribute("class", "no_result");
+		    //     message.setAttribute("tabindex", "1");
+		    //     message.setAttribute("style", "list-style: none;");
+		    //     // Add text content
+		    //     message.innerHTML = `<span>Found No Results for "${query}"</span>`;
+		    //     // Append message to results list
+		    //     list.appendChild(message);
+		    // },
+	    },
+	    resultItem: {
+	        element: "li",
+		    className: "autoComplete_result",
+		    content: (item, element) => {
+		        element.setAttribute("data-parent", "food-item");
+		    },
+		    highlight: {
+		        render: true,
+		        className: "autoComplete_highlighted"
+		    },
+		    selected: {
+		        className: "autoComplete_selected"
+		    }
+	    },
+	    onSelection: (feedback) => {
+		    input_element = document.querySelector('#brands');
+		    input_element.value = feedback.selection.value;
+		},
 	});
 </script>
 @endpush
